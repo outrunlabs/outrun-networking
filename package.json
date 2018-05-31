@@ -9,7 +9,7 @@
     "scripts": {
         "precommit": "pretty-quick --staged",
         "build": "tsc",
-        "test": "jest"
+        "test": "jest --coverage"
     },
     "jest": {
         "transform": {
