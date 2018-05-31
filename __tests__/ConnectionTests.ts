@@ -20,6 +20,7 @@ const waitFor = async (
 
     while (!lastValue && currentTry <= tries) {
         await sleep(timeout / tries)
+        lastValue = func()
         currentTry++
     }
 
@@ -45,6 +46,7 @@ describe("ConnectionTests", () => {
         let serverOnClientConnectedHitCount = 0
         server.onClientConnected.subscribe(() => {
             serverOnClientConnectedHitCount++
+            console.log("New hit count: " + serverOnClientConnectedHitCount)
         })
 
         console.log("server starting...")

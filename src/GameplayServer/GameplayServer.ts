@@ -39,6 +39,11 @@ export class GameplayServer {
             port: 80,
             wrtc: initialiationOptions.wrtc,
         })
+
+        this._connectionBroker.onPeerConnected.subscribe(() => {
+            console.log("Dispatching client connected")
+            this._onClientConnected.dispatch()
+        })
     }
 
     public send(clients: Client | Client[], message: NetworkMessage): void {}

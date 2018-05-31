@@ -5,6 +5,8 @@ import * as bodyParser from "body-parser"
 import * as SimplePeer from "simple-peer"
 const nanoid = require("nanoid")
 
+import { Event, Event } from "oni-types"
+
 // ConnectionBroker flow:
 // - First, client calls /connect to initiate a connection. A SimplePeer is created, and a token is returned.
 // - The client creates a Peer that signals with the invite returned in connect.
@@ -33,6 +35,11 @@ export class ConnectionBroker {
     private _app: express.Express
     private _tokenToConnection: { [token: string]: Connection } = {}
     private _server: http.Server
+    private _onPeerConnectedEvent = new Event<SimplePeer.Instance>()
+
+    public get onPeerConnected: IEvent<SimplePeer.Instance> {
+        return this._onPeerConnectedEvent
+    }
 
     constructor(private _opts: ConnectionBrokerOptions = DefaultBrokerOptions) {
         this._app = express()
@@ -69,6 +76,11 @@ export class ConnectionBroker {
                 }
 
                 res.send(token.toString())
+            })
+
+            peer.on("connect", () => {
+                console.log("connect!")
+                this._onPeerConnectedEvent.dispatch(peer)
             })
         })
 
