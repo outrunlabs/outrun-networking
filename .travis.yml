@@ -5,6 +5,8 @@ node_js:
     - "9"
 install:
     - npm install
+    - npm install codecov -g
 script:
     - npm run build
     - npm run test
+    - npm run coverage
