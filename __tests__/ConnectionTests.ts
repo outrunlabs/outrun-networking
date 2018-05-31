@@ -3,31 +3,7 @@ import { GameplayServer } from "./../src/GameplayServer"
 
 import * as wrtc from "wrtc"
 
-const sleep = (time: number): Promise<void> => {
-    return new Promise<void>(resolve => {
-        window.setTimeout(() => resolve(), time)
-    })
-}
-
-const waitFor = async (
-    func: () => boolean,
-    message: string,
-    timeout: number = 1000,
-): Promise<void> => {
-    const tries = 10
-    let currentTry = 1
-    let lastValue = func()
-
-    while (!lastValue && currentTry <= tries) {
-        await sleep(timeout / tries)
-        lastValue = func()
-        currentTry++
-    }
-
-    if (currentTry > tries) {
-        throw new Error("WaitFor failed: " + message)
-    }
-}
+import { sleep, waitFor } from "./../src/Common/Utility"
 
 describe("ConnectionTests", () => {
     let server: GameplayServer
@@ -50,15 +26,29 @@ describe("ConnectionTests", () => {
             console.log("New hit count: " + serverOnClientConnectedHitCount)
         })
 
-        console.log("server starting...")
         await server.start()
-        console.log("server started")
-        try {
-            await client.connect()
-        } catch (ex) {
-            console.log("ERROR: " + ex)
-        }
+        await client.connect()
 
         await waitFor(() => serverOnClientConnectedHitCount === 1, "Wait for client to connect")
+    })
+
+    it("multiple clients can connect", async () => {
+        const client1 = new GameplayClient("http://localhost:8000", { wrtc })
+        const client2 = new GameplayClient("http://localhost:8000", { wrtc })
+
+        let serverOnClientConnectedHitCount = 0
+        server.onClientConnected.subscribe(() => {
+            serverOnClientConnectedHitCount++
+            console.log("New hit count: " + serverOnClientConnectedHitCount)
+        })
+
+        await server.start()
+        await client1.connect()
+        await client2.connect()
+
+        await waitFor(
+            () => serverOnClientConnectedHitCount === 2,
+            "Wait for all clients to connect",
+        )
     })
 })

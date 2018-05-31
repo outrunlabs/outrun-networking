@@ -1,4 +1,5 @@
 import * as fs from "fs"
+import * as path from "path"
 
 import * as minimist from "minimist"
 
@@ -16,7 +17,7 @@ if (serverFiles.length !== 1) {
     process.exit(1)
 }
 
-const entryPoint = args["_"][0]
+let entryPoint = path.join(process.cwd(), args["_"][0])
 
 if (!fs.existsSync(entryPoint)) {
     console.error("Cannot find file: " + entryPoint)
@@ -38,5 +39,14 @@ const gameplayServer = new GameplayServer({
 })
 
 const game = Game.start()
+gameplayServer.start()
+game.setUpdateRate(30)
+game.start()
+
+game.onTick.subscribe(tickEvent =>
+    console.log(`[Tick ${tickEvent.tick}]: Incrementing time - ${tickEvent.deltaTime}`),
+)
+
+gameplayServer.onClientConnected.subscribe(({ id }) => console.log(`Client connected: ${id}`))
 
 activate({ gameplayServer, game })

@@ -1,5 +1,2 @@
-import * as GameplayServer from "./GameplayServer";
-
-export default {
-  GameplayServer
-};
+import * as GameplayClient from "./GameplayClient"
+import * as GameplayServer from "./GameplayServer"

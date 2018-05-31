@@ -2,6 +2,7 @@ import * as http from "http"
 
 import * as express from "express"
 import * as bodyParser from "body-parser"
+import * as cors from "cors"
 import * as SimplePeer from "simple-peer"
 const nanoid = require("nanoid")
 
@@ -43,6 +44,7 @@ export class ConnectionBroker {
 
     constructor(private _opts: ConnectionBrokerOptions = DefaultBrokerOptions) {
         this._app = express()
+        this._app.use(cors())
         this._app.use(bodyParser.json())
 
         this._app.get("/connect", (req, res) => {
