@@ -2,7 +2,13 @@ import { Event, IEvent } from "oni-types"
 
 import { ConnectionBroker } from "./ConnectionBrokerServer"
 
-export type GameplayServerInitializationOptions = {}
+export type GameplayServerInitializationOptions = {
+    wrtc: any
+}
+
+const DefaultInitializationOptions: GameplayServerInitializationOptions = {
+    wrtc: null,
+}
 
 export type ClientId = number
 
@@ -17,6 +23,7 @@ export class GameplayServer {
     private _onClientDisconnected = new Event<Client>()
 
     private _connectionBroker: ConnectionBroker
+    private _webRTC: WebRTC
 
     public get onClientConnected(): IEvent<Client> {
         return this._onClientConnected
@@ -26,8 +33,13 @@ export class GameplayServer {
         return this._onClientDisconnected
     }
 
-    constructor(initialiationOptions?: GameplayServerInitializationOptions) {
-        this._connectionBroker = new ConnectionBroker()
+    constructor(
+        initialiationOptions: GameplayServerInitializationOptions = DefaultInitializationOptions,
+    ) {
+        this._connectionBroker = new ConnectionBroker({
+            port: 80,
+            wrtc: initialiationOptions.wrtc,
+        })
     }
 
     public send(clients: Client | Client[], message: NetworkMessage): void {}
@@ -36,5 +48,7 @@ export class GameplayServer {
         this._connectionBroker.start()
     }
 
-    public stop(): void {}
+    public dispose(): void {
+        this._connectionBroker.dispose()
+    }
 }

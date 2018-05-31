@@ -1,3 +1,5 @@
+import * as ElectronWebrtc from "electron-webrtc"
+
 import { GameplayClient } from "./../src/GameplayClient"
 import { GameplayServer } from "./../src/GameplayServer"
 
@@ -18,13 +20,31 @@ const waitFor = (func: () => boolean, message: string, timeout: number = 1000) =
     }
 
     if (currentTry > tries) {
-        throw new Error("WaitFor failed " + message)
+        throw new Error("WaitFor failed: " + message)
     }
 }
 
 describe("ConnectionTests", () => {
+    let wrtc: any
+    beforeAll(() => {
+        wrtc = ElectronWebrtc()
+    })
+
+    afterAll(() => {
+        wrtc.close()
+    })
+
+    let server: GameplayServer
+    beforeEach(() => {
+        server = new GameplayServer({
+            wrtc: wrtc,
+        })
+    })
+
+    afterEach(() => {
+        server.dispose()
+    })
     it("connects", async () => {
-        const server = new GameplayServer()
         const client = new GameplayClient("http://127.0.0.1")
 
         let serverOnClientConnectedHitCount = 0

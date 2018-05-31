@@ -1,12 +1,9 @@
-const wrtc = require("electron-webrtc")()
+import * as http from "http"
 
 import * as express from "express"
 import * as bodyParser from "body-parser"
 import * as SimplePeer from "simple-peer"
 const nanoid = require("nanoid")
-
-// TODO: Move this to more appropriate place
-wrtc.on("error", (err: Error) => console.log(err))
 
 // ConnectionBroker flow:
 // - First, client calls /connect to initiate a connection. A SimplePeer is created, and a token is returned.
@@ -17,11 +14,13 @@ wrtc.on("error", (err: Error) => console.log(err))
 const getUniqueToken = () => nanoid(48)
 
 export type ConnectionBrokerOptions = {
+    wrtc: any
     port: number
 }
 
 export const DefaultBrokerOptions: ConnectionBrokerOptions = {
     port: 80,
+    wrtc: null,
 }
 
 export type Connection = {
@@ -33,6 +32,7 @@ export type Connection = {
 export class ConnectionBroker {
     private _app: express.Express
     private _tokenToConnection: { [token: string]: Connection } = {}
+    private _server: http.Server
 
     constructor(private _opts: ConnectionBrokerOptions = DefaultBrokerOptions) {
         this._app = express()
@@ -42,7 +42,7 @@ export class ConnectionBroker {
             const token = getUniqueToken()
             const peer = new SimplePeer({
                 initiator: true,
-                wrtc,
+                wrtc: this._opts.wrtc,
                 trickle: false,
                 channelConfig: {
                     ordered: false,
@@ -69,6 +69,7 @@ export class ConnectionBroker {
 
         this._app.get("/redeem/:token", (req, res) => {
             const token = req.params["token"]
+            console.log("redeem - token: " + token)
             const connection = this._tokenToConnection[token]
 
             if (connection.offer) {
@@ -77,7 +78,9 @@ export class ConnectionBroker {
         })
 
         this._app.get("/answer/:token", (req, res) => {
-            const connection = this._tokenToConnection[req.params.token]
+            const token = req.params.token
+            console.log("answer - token: " + token)
+            const connection = this._tokenToConnection[token]
 
             if (connection && connection.peer) {
                 connection.peer.signal(req.body)
@@ -88,8 +91,12 @@ export class ConnectionBroker {
     }
 
     public start(): void {
-        this._app.listen(this._opts.port, () => {
+        this._server = this._app.listen(this._opts.port, () => {
             console.log("listening on " + this._opts.port)
         })
+    }
+
+    public dispose(): void {
+        this._server.close()
     }
 }
