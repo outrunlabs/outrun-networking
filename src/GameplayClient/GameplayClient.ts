@@ -1,15 +1,19 @@
-import { IEvent, Event } from "oni-types";
+import { IEvent, Event } from "oni-types"
 
 export class GameplayClient {
-  private _onConnectedEvent = new Event<void>();
-  private _onMessageEvent = new Event<void>();
-  private _onDisconnectedEvent = new Event<void>();
+    private _onConnectedEvent = new Event<void>()
+    private _onMessageEvent = new Event<void>()
+    private _onDisconnectedEvent = new Event<void>()
 
-  constructor(private _connectionUrl: string) {}
+    public get onConnectedEvent(): IEvent<void> {
+        return this._onConnectedEvent
+    }
 
-  public connect(): void {}
+    constructor(private _connectionUrl: string) {}
 
-  public disconnect(): void {}
+    public connect(): void {}
 
-  public send(message: any): void {}
+    public disconnect(): void {}
+
+    public send(message: any): void {}
 }
