@@ -39,7 +39,9 @@ export class ConnectionBroker {
         this._app.use(bodyParser.json())
 
         this._app.get("/connect", (req, res) => {
+            console.log("test!")
             const token = getUniqueToken()
+            console.log("tokeN: " + token)
             const peer = new SimplePeer({
                 initiator: true,
                 wrtc: this._opts.wrtc,
@@ -56,7 +58,10 @@ export class ConnectionBroker {
                 offer: null,
             }
 
+            console.log("created peer")
+
             peer.on("signal", data => {
+                console.log("Got peer signal!")
                 const currentConnection = this._tokenToConnection[token]
                 this._tokenToConnection[token] = {
                     ...currentConnection,
@@ -77,7 +82,7 @@ export class ConnectionBroker {
             }
         })
 
-        this._app.get("/answer/:token", (req, res) => {
+        this._app.post("/answer/:token", (req, res) => {
             const token = req.params.token
             console.log("answer - token: " + token)
             const connection = this._tokenToConnection[token]
@@ -100,6 +105,9 @@ export class ConnectionBroker {
     }
 
     public dispose(): void {
+        const peers = Object.keys(this._tokenToConnection).forEach(key =>
+            this._tokenToConnection[key].peer.destroy(),
+        )
         this._server.close()
     }
 }

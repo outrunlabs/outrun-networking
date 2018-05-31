@@ -34,7 +34,8 @@
         "oni-types": "^0.0.8",
         "request": "^2.87.0",
         "request-promise": "^4.2.2",
-        "simple-peer": "^9.1.2"
+        "simple-peer": "^9.1.2",
+        "wrtc": "^0.1.4"
     },
     "devDependencies": {
         "@types/body-parser": "^1.17.0",
