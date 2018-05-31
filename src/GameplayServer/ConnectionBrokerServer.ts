@@ -37,7 +37,7 @@ export class ConnectionBroker {
     private _server: http.Server
     private _onPeerConnectedEvent = new Event<SimplePeer.Instance>()
 
-    public get onPeerConnected: IEvent<SimplePeer.Instance> {
+    public get onPeerConnected(): IEvent<SimplePeer.Instance> {
         return this._onPeerConnectedEvent
     }
 
