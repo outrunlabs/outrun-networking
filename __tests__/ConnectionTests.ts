@@ -34,6 +34,7 @@ describe("ConnectionTests", () => {
     beforeEach(() => {
         server = new GameplayServer({
             wrtc,
+            port: 8000,
         })
     })
 
@@ -41,7 +42,7 @@ describe("ConnectionTests", () => {
         server.dispose()
     })
     it("connects", async () => {
-        const client = new GameplayClient("http://localhost", { wrtc })
+        const client = new GameplayClient("http://localhost:8000", { wrtc })
 
         let serverOnClientConnectedHitCount = 0
         server.onClientConnected.subscribe(() => {

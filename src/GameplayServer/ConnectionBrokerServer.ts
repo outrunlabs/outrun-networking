@@ -5,7 +5,7 @@ import * as bodyParser from "body-parser"
 import * as SimplePeer from "simple-peer"
 const nanoid = require("nanoid")
 
-import { Event, Event } from "oni-types"
+import { Event, IEvent } from "oni-types"
 
 // ConnectionBroker flow:
 // - First, client calls /connect to initiate a connection. A SimplePeer is created, and a token is returned.

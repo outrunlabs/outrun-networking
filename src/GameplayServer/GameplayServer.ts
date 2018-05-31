@@ -4,10 +4,12 @@ import { ConnectionBroker } from "./ConnectionBrokerServer"
 
 export type GameplayServerInitializationOptions = {
     wrtc: any
+    port: number
 }
 
 const DefaultInitializationOptions: GameplayServerInitializationOptions = {
     wrtc: null,
+    port: 80,
 }
 
 export type ClientId = number
@@ -35,10 +37,7 @@ export class GameplayServer {
     constructor(
         initialiationOptions: GameplayServerInitializationOptions = DefaultInitializationOptions,
     ) {
-        this._connectionBroker = new ConnectionBroker({
-            port: 80,
-            wrtc: initialiationOptions.wrtc,
-        })
+        this._connectionBroker = new ConnectionBroker(initialiationOptions)
 
         this._connectionBroker.onPeerConnected.subscribe(() => {
             console.log("Dispatching client connected")
