@@ -6,6 +6,9 @@
     "version": "0.0.1",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
+    "bin": {
+        "start-game-server": "./cli/start-game-server.js"
+    },
     "scripts": {
         "precommit": "pretty-quick --staged",
         "build": "tsc",
@@ -28,9 +31,11 @@
     },
     "dependencies": {
         "@types/express": "^4.11.1",
+        "@types/minimist": "^1.2.0",
         "body-parser": "^1.18.3",
         "electron-webrtc": "^0.3.0",
         "express": "^4.16.3",
+        "minimist": "^1.2.0",
         "nanoid": "^1.0.2",
         "oni-types": "^0.0.8",
         "request": "^2.87.0",
