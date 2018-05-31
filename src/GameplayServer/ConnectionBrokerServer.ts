@@ -34,7 +34,7 @@ export type Connection = {
 export class ConnectionBroker {
     private _app: express.Express
     private _tokenToConnection: { [token: string]: Connection } = {}
-    private _server: http.Server
+    private _server: http.Server | null = null
     private _onPeerConnectedEvent = new Event<SimplePeer.Instance>()
 
     public get onPeerConnected(): IEvent<SimplePeer.Instance> {
@@ -120,6 +120,8 @@ export class ConnectionBroker {
         const peers = Object.keys(this._tokenToConnection).forEach(key =>
             this._tokenToConnection[key].peer.destroy(),
         )
-        this._server.close()
+        if (this._server) {
+            this._server.close()
+        }
     }
 }
