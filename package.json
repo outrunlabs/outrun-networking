@@ -2,15 +2,42 @@
   "name": "outrun-networking",
   "author": "Outrun Labs, LLC",
   "email": "contact@outrunlabs.com",
-  "version": "0.01",
+  "license": "GPL-3.0",
+  "version": "0.0.1",
   "scripts": {
-    "start": "node index.js"
+    "precommit": "pretty-quick --staged",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   },
   "dependencies": {
     "electron-webrtc": "^0.3.0",
     "express": "^4.16.3",
+    "oni-types": "^0.0.8",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
     "simple-peer": "^9.1.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.2.3",
+    "husky": "^0.14.3",
+    "jest": "^23.1.0",
+    "prettier": "^1.13.3",
+    "pretty-quick": "^1.6.0",
+    "ts-jest": "^22.4.6",
+    "typescript": "^2.8.4"
   }
 }
