@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-"use-strict"
+"use strict"
 
-console.log("Hello world")
+require("./../lib/GameplayServerHost/index.js")
