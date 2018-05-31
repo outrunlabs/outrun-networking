@@ -23,7 +23,6 @@ export class GameplayServer {
     private _onClientDisconnected = new Event<Client>()
 
     private _connectionBroker: ConnectionBroker
-    private _webRTC: WebRTC
 
     public get onClientConnected(): IEvent<Client> {
         return this._onClientConnected
@@ -44,8 +43,8 @@ export class GameplayServer {
 
     public send(clients: Client | Client[], message: NetworkMessage): void {}
 
-    public start(): void {
-        this._connectionBroker.start()
+    public async start(): Promise<void> {
+        return this._connectionBroker.start()
     }
 
     public dispose(): void {

@@ -40,6 +40,7 @@
         "@types/body-parser": "^1.17.0",
         "@types/jest": "^22.2.3",
         "@types/nanoid": "^1.0.0",
+        "@types/node": "^10.1.4",
         "@types/request": "^2.47.0",
         "@types/request-promise": "^4.1.41",
         "@types/simple-peer": "^6.1.4",

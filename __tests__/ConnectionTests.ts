@@ -45,15 +45,17 @@ describe("ConnectionTests", () => {
         server.dispose()
     })
     it("connects", async () => {
-        const client = new GameplayClient("http://127.0.0.1")
+        const client = new GameplayClient("http://127.0.0.1", { wrtc })
 
         let serverOnClientConnectedHitCount = 0
         server.onClientConnected.subscribe(() => {
             serverOnClientConnectedHitCount++
         })
 
-        server.start()
-        client.connect()
+        console.log("server starting...")
+        await server.start()
+        console.log("server started")
+        await client.connect()
 
         await waitFor(() => serverOnClientConnectedHitCount === 1, "Wait for client to connect")
     })

@@ -90,9 +90,12 @@ export class ConnectionBroker {
         })
     }
 
-    public start(): void {
-        this._server = this._app.listen(this._opts.port, () => {
-            console.log("listening on " + this._opts.port)
+    public start(): Promise<void> {
+        return new Promise(resolve => {
+            this._server = this._app.listen(this._opts.port, () => {
+                console.log("listening on " + this._opts.port)
+                resolve()
+            })
         })
     }
 
