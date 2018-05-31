@@ -85,7 +85,9 @@ export class ConnectionBroker {
 
             res.send()
         })
+    }
 
+    public start(): void {
         this._app.listen(this._opts.port, () => {
             console.log("listening on " + this._opts.port)
         })

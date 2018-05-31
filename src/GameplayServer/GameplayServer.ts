@@ -1,32 +1,40 @@
-import { Event, IEvent } from "oni-types";
+import { Event, IEvent } from "oni-types"
 
-export type GameplayServerInitializationOptions = {};
+import { ConnectionBroker } from "./ConnectionBrokerServer"
 
-export type ClientId = number;
+export type GameplayServerInitializationOptions = {}
+
+export type ClientId = number
 
 export type Client = {
-  id: ClientId;
-};
+    id: ClientId
+}
 
-export type NetworkMessage = {};
+export type NetworkMessage = {}
 
 export class GameplayServer {
-  private _onClientConnected = new Event<Client>();
-  private _onClientDisconnected = new Event<Client>();
+    private _onClientConnected = new Event<Client>()
+    private _onClientDisconnected = new Event<Client>()
 
-  public get onClientConnected(): IEvent<Client> {
-    return this._onClientConnected;
-  }
+    private _connectionBroker: ConnectionBroker
 
-  public get onClientDisconnected(): IEvent<Client> {
-    return this._onClientDisconnected;
-  }
+    public get onClientConnected(): IEvent<Client> {
+        return this._onClientConnected
+    }
 
-  constructor(initialiationOptions?: GameplayServerInitializationOptions) {}
+    public get onClientDisconnected(): IEvent<Client> {
+        return this._onClientDisconnected
+    }
 
-  public send(clients: Client | Client[], message: NetworkMessage): void {}
+    constructor(initialiationOptions?: GameplayServerInitializationOptions) {
+        this._connectionBroker = new ConnectionBroker()
+    }
 
-  public start(): void {}
+    public send(clients: Client | Client[], message: NetworkMessage): void {}
 
-  public stop(): void {}
+    public start(): void {
+        this._connectionBroker.start()
+    }
+
+    public stop(): void {}
 }
