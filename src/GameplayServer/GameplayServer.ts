@@ -18,11 +18,15 @@ export type Client = {
     id: ClientId
 }
 
-export type NetworkMessage = {}
+export type MessageReceivedEventArgs = {
+    client: Client
+    message: any
+}
 
 export class GameplayServer {
     private _onClientConnected = new Event<Client>()
     private _onClientDisconnected = new Event<Client>()
+    private _onMessageReceivedEvent = new Event<MessageReceivedEventArgs>()
 
     private _connectionBroker: ConnectionBroker
 
@@ -34,18 +38,22 @@ export class GameplayServer {
         return this._onClientDisconnected
     }
 
+    public get onMessageReceived(): IEvent<MessageReceivedEventArgs> {
+        return this._onMessageReceivedEvent
+    }
+
     constructor(
         initialiationOptions: GameplayServerInitializationOptions = DefaultInitializationOptions,
     ) {
         this._connectionBroker = new ConnectionBroker(initialiationOptions)
 
-        this._connectionBroker.onPeerConnected.subscribe(() => {
+        this._connectionBroker.onPeerConnected.subscribe(peer => {
             console.log("Dispatching client connected")
             this._onClientConnected.dispatch()
         })
     }
 
-    public send(clients: Client | Client[], message: NetworkMessage): void {}
+    public send(clients: Client | Client[], message: any): void {}
 
     public async start(): Promise<void> {
         return this._connectionBroker.start()
