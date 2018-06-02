@@ -23,7 +23,6 @@ describe("ConnectionTests", () => {
         let serverOnClientConnectedHitCount = 0
         server.onClientConnected.subscribe(() => {
             serverOnClientConnectedHitCount++
-            console.log("New hit count: " + serverOnClientConnectedHitCount)
         })
 
         await server.start()
