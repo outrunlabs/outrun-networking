@@ -11,14 +11,22 @@ const DefaultGameplayClientOptions = {
     wrtc: null,
 }
 
+export type ClientMessageEventArgs = {
+    message: any
+}
+
 export class GameplayClient {
     private _onConnectedEvent = new Event<void>()
-    private _onMessageEvent = new Event<void>()
+    private _onMessageEvent = new Event<ClientMessageEventArgs>()
     private _onDisconnectedEvent = new Event<void>()
     private _peer: SimplePeer.Instance | null = null
 
     public get onConnectedEvent(): IEvent<void> {
         return this._onConnectedEvent
+    }
+
+    public get onMessageEvent(): IEvent<ClientMessageEventArgs> {
+        return this._onMessageEvent
     }
 
     constructor(
@@ -55,6 +63,12 @@ export class GameplayClient {
             peer.on("connect", () => {
                 console.log("client connected!")
                 res()
+            })
+
+            peer.on("data", msg => {
+                this._onMessageEvent.dispatch({
+                    message: msg,
+                })
             })
 
             peer.signal(JSON.parse(invite))
