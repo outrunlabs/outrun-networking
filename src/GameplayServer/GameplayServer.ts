@@ -50,6 +50,10 @@ export class GameplayServer {
         this._connectionBroker.onPeerConnected.subscribe(peer => {
             console.log("Dispatching client connected")
             this._onClientConnected.dispatch()
+
+            peer.on("data", (data: any) => {
+                this._onMessageReceivedEvent.dispatch({ client: null as any, message: data })
+            })
         })
     }
 

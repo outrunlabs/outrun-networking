@@ -12,7 +12,7 @@
     "scripts": {
         "precommit": "pretty-quick --staged",
         "build": "tsc",
-        "test": "jest --coverage",
+        "test": "jest --runInBand --coverage",
         "coverage": "codecov"
     },
     "jest": {
