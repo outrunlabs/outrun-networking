@@ -35,7 +35,7 @@ export class GameplayClient {
     ) {}
 
     public async connect(): Promise<void> {
-        return new Promise(async res => {
+        return new Promise<void>(async res => {
             console.log("Making request to: " + this._connectionUrl)
             const token = await request(`${this._connectionUrl}/connect`)
             console.log("Got token: " + token)
