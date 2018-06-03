@@ -26,19 +26,23 @@ describe("ServerSendTests", () => {
             payload: "world",
         }
 
-        let messages: any[] = []
-        let serverOnClientConnectedHitCount = 0
-        server.onMessageReceived.subscribe(({ client, message }) => {
-            messages.push(JSON.parse(message.toString()))
+        let latestId: string = null
+        server.onClientConnected.subscribe(({ id }) => {
+            latestId = id
         })
 
         await server.start()
         await client.connect()
 
-        client.send(message)
+        let lastMessage: any = null
+        client.onMessageEvent.subscribe(({ message }) => {
+            lastMessage = message
+        })
 
-        await waitFor(() => messages.length > 0, "Wait for messaage to be received")
+        server.send(latestId, message)
 
-        expect(messages).toEqual([message])
+        await waitFor(() => lastMessage !== null, "Wait for messaage to be received")
+
+        expect(lastMessage).toEqual(message)
     })
 })

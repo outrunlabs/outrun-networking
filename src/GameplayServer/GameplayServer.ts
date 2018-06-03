@@ -1,7 +1,7 @@
+import * as SimplePeer from "simple-peer"
 import { Event, IEvent } from "oni-types"
 
 import { getUniqueToken } from "./../Common/Utility"
-
 import { ConnectionBroker } from "./ConnectionBrokerServer"
 
 export type GameplayServerInitializationOptions = {
@@ -34,6 +34,7 @@ export class GameplayServer {
 
     private _connectionBroker: ConnectionBroker
     private _idToClient: { [key: string]: Client } = {}
+    private _idToPeer: { [key: string]: SimplePeer.Instance } = {}
 
     public get onClientConnected(): IEvent<Client> {
         return this._onClientConnected
@@ -60,6 +61,8 @@ export class GameplayServer {
             }
             this._idToClient[token] = client
             this._onClientConnected.dispatch(client)
+
+            this._idToPeer[token] = peer
 
             peer.on("data", (data: any) => {
                 this._onMessageReceivedEvent.dispatch({ client, message: data })
