@@ -67,7 +67,7 @@ export class GameplayClient {
 
             peer.on("data", msg => {
                 this._onMessageEvent.dispatch({
-                    message: msg,
+                    message: JSON.parse(msg.toString()),
                 })
             })
 

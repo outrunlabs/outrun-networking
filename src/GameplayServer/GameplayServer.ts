@@ -70,7 +70,19 @@ export class GameplayServer {
         })
     }
 
-    public send(clients: ClientId | ClientId[], message: any): void {}
+    public send(clients: ClientId | ClientId[], message: any): void {
+        let clientsToSend = []
+
+        if (clients instanceof Array) {
+            clientsToSend = [...clients]
+        } else {
+            clientsToSend = [clients]
+        }
+
+        clientsToSend.forEach(cl => {
+            this._idToPeer[cl].send(JSON.stringify(message))
+        })
+    }
 
     public async start(): Promise<void> {
         return this._connectionBroker.start()
