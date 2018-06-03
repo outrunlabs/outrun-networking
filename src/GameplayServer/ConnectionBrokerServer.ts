@@ -8,13 +8,13 @@ const nanoid = require("nanoid")
 
 import { Event, IEvent } from "oni-types"
 
+import { getUniqueToken } from "./../Common/Utility"
+
 // ConnectionBroker flow:
 // - First, client calls /connect to initiate a connection. A SimplePeer is created, and a token is returned.
 // - The client creates a Peer that signals with the invite returned in connect.
 // - The client should listen for the 'signal' event and callback with
 // - At this point, since there is no trickling, the peers should be connected unless there is a connection error.
-
-const getUniqueToken = () => nanoid(48)
 
 export type ConnectionBrokerOptions = {
     wrtc: any

@@ -1,3 +1,5 @@
+const nanoid = require("nanoid")
+
 export const sleep = (time: number): Promise<void> => {
     return new Promise<void>(resolve => {
         window.setTimeout(() => resolve(), time)
@@ -23,3 +25,5 @@ export const waitFor = async (
         throw new Error("WaitFor failed: " + message)
     }
 }
+
+export const getUniqueToken = () => nanoid(48)

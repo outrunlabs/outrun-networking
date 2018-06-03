@@ -50,4 +50,24 @@ describe("ConnectionTests", () => {
             "Wait for all clients to connect",
         )
     })
+
+    it("clients should have unique ids", async () => {
+        const client1 = new GameplayClient("http://localhost:8000", { wrtc })
+        const client2 = new GameplayClient("http://localhost:8000", { wrtc })
+
+        let clientIds: string[] = []
+        server.onClientConnected.subscribe(({ id }) => {
+            clientIds.push(id)
+        })
+
+        await server.start()
+        await client1.connect()
+        await client2.connect()
+
+        await waitFor(() => clientIds.length === 2, "Wait for all clients to connect")
+
+        expect(clientIds[0]).not.toEqual(clientIds[1])
+        expect(typeof clientIds[0]).toBe("string")
+        expect(typeof clientIds[1]).toBe("string")
+    })
 })

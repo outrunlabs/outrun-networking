@@ -1,5 +1,7 @@
 import { Event, IEvent } from "oni-types"
 
+import { getUniqueToken } from "./../Common/Utility"
+
 import { ConnectionBroker } from "./ConnectionBrokerServer"
 
 export type GameplayServerInitializationOptions = {
@@ -12,7 +14,7 @@ const DefaultInitializationOptions: GameplayServerInitializationOptions = {
     port: 80,
 }
 
-export type ClientId = number
+export type ClientId = string
 
 export type Client = {
     id: ClientId
@@ -23,12 +25,15 @@ export type MessageReceivedEventArgs = {
     message: any
 }
 
+export type IdToClient = { [key: string]: Client }
+
 export class GameplayServer {
     private _onClientConnected = new Event<Client>()
     private _onClientDisconnected = new Event<Client>()
     private _onMessageReceivedEvent = new Event<MessageReceivedEventArgs>()
 
     private _connectionBroker: ConnectionBroker
+    private _idToClient: { [key: string]: Client } = {}
 
     public get onClientConnected(): IEvent<Client> {
         return this._onClientConnected
@@ -48,16 +53,21 @@ export class GameplayServer {
         this._connectionBroker = new ConnectionBroker(initialiationOptions)
 
         this._connectionBroker.onPeerConnected.subscribe(peer => {
-            console.log("Dispatching client connected")
-            this._onClientConnected.dispatch()
+            const token = getUniqueToken()
+            console.log("Client connected: " + token)
+            const client = {
+                id: token,
+            }
+            this._idToClient[token] = client
+            this._onClientConnected.dispatch(client)
 
             peer.on("data", (data: any) => {
-                this._onMessageReceivedEvent.dispatch({ client: null as any, message: data })
+                this._onMessageReceivedEvent.dispatch({ client, message: data })
             })
         })
     }
 
-    public send(clients: Client | Client[], message: any): void {}
+    public send(clients: ClientId | ClientId[], message: any): void {}
 
     public async start(): Promise<void> {
         return this._connectionBroker.start()
