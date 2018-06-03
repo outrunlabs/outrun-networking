@@ -2,11 +2,19 @@ sudo: required
 dist: trusty
 language: node_js
 node_js:
-    - "9"
+- '9'
 install:
-    - npm install
-    - npm install codecov -g
+- npm install
+- npm install codecov -g
 script:
-    - npm run build
-    - npm run test
-    - npm run coverage
+- npm run build
+- npm run test
+- npm run coverage
+deploy:
+  provider: npm
+  email: npm@outrunlabs.com
+  skip_cleanup: true
+  api_key:
+    secure: cTU9guS5EYJB5/LiRx+uifA1tiCspZccJgSzR8+C/c2bT0oMSOLjdMmMgEPLmePA3s19PrnigvfYHDvWl6l78vM4l2rrtoWKe64TAqnwRvUbP+1JUwADYctge4zVi9Df6rEYykYzsAa+Tgob0KHeOb6+kksl8bZg0tNEiewgRi/U8+gq7bHBYHEP9IX2UBD8ezGO7YMBWt5xy1bWX2o2JcagCS6eY/71P2ZJv33v9D+M0fzKWM9h3kTxNemeYqlSZWi/aq1sW75nD6FxYZtpmjt2qm+ihRYIoghac2dJqb33vJ2zhEsXT9uWb4AD5ivUZFMzCbrV8YbrjS8zcUs24rmd3lAqb49q8ahsxRQ5gI0zom3HN+uMVGnY2FQvri5QJvf2HAe2BR9SQ81Lcg3dgCMvAkXy6cq6d5e8HVdM2ZwPGTVVlrdwi1pXVB5cBTKvvX1Q/icbIuvvQPW5Ys+7ZWKCzXHJJvUyn8qxbh8YErPL3z7DhgmtEagvNzUAal3fO/DRpSjx5nDuhsOsExlHxG6aZguzUD8YBZd6LR7r+xsjE1TbYVO8VM5zhXwBh03Tnxw2KP98kDNq+hZ+tZz1LGubw69dq6/KLu1TNjSbEjp/uXN5Lu2rQvfe3GIzhn3g29TKms3C0dtQmybkAZX54kbsQdp8tTYEKIE+yZ0Wreg=
+  on:
+    repo: outrunlabs/outrun-networking
